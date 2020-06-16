@@ -52,7 +52,7 @@
             class="justify-center">
             <div id="request-action-print"
               class="mx-4">
-              <v-btn icon color="black" class="grey lighten-3">
+              <v-btn icon color="black" class="grey lighten-3" @click="print = true">
                 <v-icon>mdi-printer</v-icon>
               </v-btn>
               <v-spacer></v-spacer>
@@ -140,17 +140,31 @@
         <v-container fill-height v-else class="justify-center align-center" style="height: 50vh">
           <v-progress-circular indeterminate size="32" />
         </v-container>
+
+        <report v-if="print"
+          :headers="headers"
+          :table="request"
+          title="Laporan Detail Permintaan" />
     </div>
   </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions } from "vuex"
+import report from '@/components/Report/Request'
+
 export default {
   props:['id'],
+  components: { report },
   data: () => ({
     dialog: null,
-    doing: null
+    doing: null,
+    print: null,
+    headers: [
+      { text: 'Perangkat', value: 'pName'},
+      { text: 'Jenis', value: 'type'},
+      { text: 'Jumlah', value: 'qty'},
+    ]
   }),
   computed: {
     ...mapState("request", ["request"]),
@@ -209,7 +223,7 @@ export default {
         this.dialog = null
         this.doing = null
       })
-    }
+    },
   },
   mounted() {
     this.$store.state.request.request = null

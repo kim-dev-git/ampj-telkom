@@ -15,6 +15,14 @@
     <v-toolbar-title class="ml-5 headline font-weight-bold">{{ pageTitle }}</v-toolbar-title>
 
     <v-spacer></v-spacer>
+    
+    <v-btn @click="$emit('print')"
+      icon
+      color="black"
+      class="grey lighten-3 mr-2 mt-1"
+      height="36" width="36">
+      <v-icon>mdi-printer</v-icon>
+    </v-btn>
 
     <mini-cart class="mr-2 mt-1" v-if="currentPath === '/perangkat' && $store.state.user.role === 'Teknisi'" />
  
