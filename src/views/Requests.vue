@@ -9,15 +9,15 @@
       transition="fade-transition">
       <div class="mt-n4 mt-sm-0">
         <contentTable
-          v-if="requestsByDate !== []"
+          v-if="requestByRole !== []"
           :headers="headers"
-          :items="requestsByDate"/>
+          :items="requestByRole"/>
       </div>
     </v-lazy>
 
     <report v-if="print"
       :headers="headers"
-      :table="requestsByDate"
+      :table="requestByRole"
       title="Laporan Permintaan Perangkat" />
     
   </div>
@@ -54,6 +54,28 @@ export default {
   }),
   computed: {
     ...mapGetters("request", ["requestsByDate"]),
+    requestByRole() {
+      var result = []
+      const datas = this.requestsByDate
+      const role = this.$store.state.user.role
+      if(role === 'Teknisi') {
+        const team = this.$store.state.user.team
+        datas.forEach(data => {
+          if(data.team === team) { result.push(data) }
+        })
+      } else if(role === 'Team Leader') {
+        const teams = this.$store.state.team.teams
+        teams.forEach(team => {
+          datas.forEach(data => {
+            if(data.team === team.id) { result.push(data) }
+          })
+        })
+      } else {
+        result = datas
+      }
+
+      return result
+    }
   },
   methods: {
     //...mapActions("request", ["getRequests"])
