@@ -11,6 +11,14 @@
         </router-link>
         <v-spacer />
         <div v-if="customer">
+          <v-btn id="btn-print"
+            @click="print = true"
+            icon
+            color="black"
+            class="grey lighten-3 mr-2 mt-1"
+            height="36" width="36">
+            <v-icon>mdi-printer</v-icon>
+          </v-btn>
           <v-btn id="btn-dispatch"
             v-if="$store.state.user.role === 'Team Leader'"
             icon
@@ -371,15 +379,23 @@
         <v-container fill-height v-else class="justify-center align-center" style="height: 50vh">
           <v-progress-circular indeterminate size="32" />
         </v-container>
+
+        <report v-if="print"
+          :headers="headers"
+          :table="customer"
+          title="Laporan PSB" />
     </div>
   </div>
 </template>
 
 <script>
+import report from '@/components/Report/Customer'
 import { mapState, mapGetters, mapActions } from "vuex"
 export default {
   props:['id'],
+  components: { report },
   data: () => ({
+    print: false,
     show: false,
     dialog: null,
     dialog_otw: null,
@@ -389,7 +405,11 @@ export default {
     dialog_installed: null,
     isActive: null,
     doing: null,
-    input: {}
+    input: {},
+    headers: [
+      { text: 'Deskripsi', value: 'desc'},
+      { text: 'Tanggal', value: 'createdAt'},
+    ]
   }),
   computed: {
     ...mapState("customer", ["customer"]),
