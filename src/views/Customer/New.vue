@@ -11,6 +11,32 @@
         </li>
       </ul>
     </v-layout>-->
+    <v-layout>
+      <div style="overflow: auto;">
+        <v-btn-toggle
+          v-model="filter"
+          tile
+          color="error"
+          group
+        >
+          <v-btn value="0">
+            Semua
+          </v-btn>
+
+          <v-btn value="Terpasang">
+            Terpasang
+          </v-btn>
+
+          <v-btn value="Kendala">
+            Kendala
+          </v-btn>
+
+          <v-btn value="Berhenti Berlangganan">
+            Berhenti Berlangganan
+          </v-btn>
+        </v-btn-toggle>
+      </div>
+    </v-layout>
     <v-lazy
       v-model="isActive"
       :options="{ threshold: .5 }"
@@ -19,13 +45,13 @@
         <contentTable
           v-if="customersFiltered !== []"
           :headers="headers"
-          :items="customersFiltered"/>
+          :items="customersFilteredStatus" />
       </div>
     </v-lazy>
 
     <report v-if="print"
       :headers="headers"
-      :table="customers"
+      :table="customersFilteredStatus"
       title="Laporan Data Pelanggan" />
     
   </div>
@@ -52,6 +78,7 @@ export default {
   data: () => ({
     print: false,
     isActive: false,
+    filter: '0',
     headers: [
       { text: 'Tim', value: 'team' },
       { text: 'Nama', value: 'name' },
@@ -61,6 +88,7 @@ export default {
     ],
   }),
   computed: {
+    search() { return this.$store.state.search },
     teams() { return this.$store.state.team.teams },
     customers() { return this.$store.state.customer.customers },
     customersFiltered() {
@@ -75,6 +103,13 @@ export default {
         } else {
           return this.customers
         }
+    },
+    customersFilteredStatus() {
+      if (this.filter === '0') {
+        return this.customersFiltered
+      } else {
+        return this.customersFiltered.filter(customer => customer.status === this.filter)
+      }
     }
     
   },

@@ -13,6 +13,9 @@ export default {
   members(id) {
     return Api.all(`${END_POINT}/${id}/members`)
   },
+  bag(id) {
+    return Api.all(`${END_POINT}/${id}/bag`)
+  },
   show(id) {
     return Api.show(END_POINT, id)
   },

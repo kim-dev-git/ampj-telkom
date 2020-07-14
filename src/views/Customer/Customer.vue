@@ -81,7 +81,6 @@
           </v-btn>
         </div>
       </v-app-bar>
-
         <div id="customer-content" class="white mb-n2" v-if="customer">
           <div id="customer-info"
             class="pr-8 pl-6">
@@ -350,8 +349,17 @@
               <v-card-text>
                 Sudah terpasang ?
               </v-card-text>
+              <v-divider />
 
-              <v-divider></v-divider>
+              <div v-if="user && user.role === 'Teknisi'">
+                <div v-if="teams && teams[0] && teams[0].bag" v-for="bag in teams[0].bag" :key="bag.pID" class="px-4">
+                  <v-text-field
+                    v-if="teams && teams[0] && teams[0].bag"
+                    type="number" :label="`${bag.pName} (${bag.type.toUpperCase()})`" v-model.number="used[bag.id]" />
+                </div>
+              </div>
+
+              <v-divider />
 
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -409,7 +417,8 @@ export default {
     headers: [
       { text: 'Deskripsi', value: 'desc'},
       { text: 'Tanggal', value: 'createdAt'},
-    ]
+    ],
+    used: {}
   }),
   computed: {
     ...mapState("customer", ["customer"]),
@@ -424,6 +433,7 @@ export default {
       })
       return array
     },
+    tools() { return this.$store.state.tool.tools }
   },
   methods: {
     icon(type) {
@@ -519,9 +529,16 @@ export default {
       })
     },
     onInstalled() {
+      const tools = []
+      this.teams[0].bag.forEach(tool => {
+        var obj = tool
+        obj.qty = this.used[tool.id]
+        tools.push(obj)
+      })
       const payload = {
         id: this.id,
-        teamID: this.$store.state.user.team
+        teamID: this.$store.state.user.team,
+        tools: tools
       }
       this.$store.dispatch('customer/statusInstalled', payload).then(() => {
         this.$store.dispatch("customer/getCustomer", this.id)

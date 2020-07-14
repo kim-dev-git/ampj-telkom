@@ -14,8 +14,9 @@ var config = {
 
 const fb = firebase.initializeApp(config)
 const db = firebase.firestore()
+const inc = firebase.firestore.FieldValue.increment
 
-export { fb, db }
+export { fb, db, inc }
 // firebase.auth().onAuthStateChanged((user) => {
 //   if (user) {
 //     this.$store.dispatch('autoLogin', user)

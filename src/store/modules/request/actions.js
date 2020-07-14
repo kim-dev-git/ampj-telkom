@@ -1,6 +1,6 @@
 import Request from "@/apis/Request"
 import Vue from 'vue'
-import { fb, db } from '@/firebase'
+import { fb, db, inc } from '@/firebase'
 
 Vue.use(fb)
 
@@ -77,6 +77,7 @@ export const readyRequest = ({ commit, dispatch }, id) => {
 export const doneRequest = ({ commit, dispatch }, id) => {
   commit('SET_LOADING', true, { root: true })
   Request.done(id).then(() => {
+    dispatch('addToBag', id)
     dispatch('getRequest', id)
     dispatch('addNotification', {
       type: 'info',
@@ -84,4 +85,24 @@ export const doneRequest = ({ commit, dispatch }, id) => {
     }, { root: true })
   })
   commit('SET_LOADING', false, { root: true })
+}
+
+export const addToBag = ({ state }, id) => {
+  const team = state.request.team
+  const items = state.request.items
+  const teamRef = db.collection('listTeams').doc(team)
+  const bagRef = teamRef.collection('bag')
+  // const bags = state.team.teams[0].bags
+  // async () {
+  //   let result = await teamRef.get()
+  //   let bag = result.data()
+  // }
+  items.forEach(item => {
+    var obj = {
+      pName: item.pName,
+      type: item.type,
+      qty: inc(Number(item.qty)),
+    }
+    bagRef.doc(item.pID).set(obj, { merge: true })
+  }) 
 }

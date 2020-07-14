@@ -1,6 +1,6 @@
 import Customer from "@/apis/Customer"
 import Vue from 'vue'
-import { fb, db } from '@/firebase'
+import { fb, db, inc } from '@/firebase'
 
 Vue.use(fb)
 
@@ -102,10 +102,33 @@ export const statusSetting = ({ commit, dispatch }, payload) => {
 export const statusInstalled = ({ commit, dispatch }, payload) => {
   commit('SET_LOADING', true, { root: true })
   Customer.installed(payload.id, payload.teamID).then(() => {
+    // payload.tools.forEach(tool => {
+    //   dispatch('minToBag', tool)
+    // })
+    console.log('Success')
+    dispatch('minToBag', payload.tools)
     dispatch('addNotification', {
       type: 'success',
       message: `Status diubah menjadi terpasang`
     }, { root: true })
   })
   commit('SET_LOADING', false, { root: true })
+}
+
+export const minToBag = ({ state }, tools) => {
+  console.log('minToBag')
+  const team = state.customer.team
+  console.log('Team:', team)
+  const items = tools
+  console.log('Items:', items)
+  const teamRef = db.collection('listTeams').doc(team)
+  const bagRef = teamRef.collection('bag')
+  items.forEach(item => {
+    var obj = {
+      pName: item.pName,
+      type: item.type,
+      qty: inc(Number(item.qty * -1)),
+    }
+    bagRef.doc(item.id).set(obj, { merge: true })
+  }) 
 }

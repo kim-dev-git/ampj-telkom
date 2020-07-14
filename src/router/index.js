@@ -3,18 +3,18 @@ import VueRouter from 'vue-router'
 
 import { fb } from '@/./firebase'
 
-import Home from '../views/Home.vue'
+// import Home from '../views/Home.vue'
 
-import Login from '@/views/User/Login.vue'
+// import Login from '@/views/User/Login.vue'
 
-import Dashboard from '@/views/Dashboard.vue'
-import Requests from '@/views/Requests.vue'
-import Request from '@/views/Request.vue'
-import Tools from '@/views/Tools'
-import Tool from '@/views/Tool'
-import Teams from '@/views/Teams'
-import Team from '@/views/Team'
-import Absent from '@/views/Absent'
+// import Dashboard from '@/views/Dashboard.vue'
+// import Requests from '@/views/Requests.vue'
+// import Request from '@/views/Request.vue'
+// import Tools from '@/views/Tools'
+// import Tool from '@/views/Tool'
+// import Teams from '@/views/Teams'
+// import Team from '@/views/Team'
+// import Absent from '@/views/Absent'
 
 Vue.use(VueRouter)
 
@@ -28,7 +28,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home,
+    component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue'),
     meta: { requiresAuth: true },
     children: [
       {
@@ -90,6 +90,17 @@ const routes = [
         component: () => import(/* webpackChunkName: "Team" */ '../views/Customer/Customer.vue'),
         props: true
       },
+      {
+        path: "berhentiberlangganan",
+        name: 'StopSubs',
+        component: () => import(/* webpackChunkName: "StopSubs" */ '../views/Customer/StopSubs.vue'),
+      },
+      // {
+      //   path: "pasangbaru/:id",
+      //   name: 'Customer',
+      //   component: () => import(/* webpackChunkName: "Team" */ '../views/Customer/Customer.vue'),
+      //   props: true
+      // },
     ]
   },
   {

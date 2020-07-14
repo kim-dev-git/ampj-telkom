@@ -42,10 +42,28 @@
                   <span class="white--text headline" v-if="user.name">{{ (user.name).substring(0,1) }}</span>
                 </v-avatar>
               </v-layout>
-              <v-card-title class="headline font-weight-bold mb-n4">{{ user.name }}</v-card-title>
+              <p class="headline font-weight-bold text-center mb-n1">{{ user.name }}</p>
               <p class="subtitle-1 text--secondary text-center mb-0">{{ user.role }}</p>
               <v-layout class="justify-center mt-4">
                 <v-btn outlined color="info" @click="onLogout()">Logout</v-btn>
+              </v-layout>
+
+              <v-divider class="mt-4" />
+
+              <v-layout v-if="user && user.role === 'Teknisi' && teams && teams[0] && teams[0].bag">
+                <div id="tool-list"
+                  class="mt-2">
+                  <p class="subtitle-1 font-weight-bold text-center text--disabled mb-0">Tas Teknisi</p>
+                  <v-layout
+                    row wrap
+                    class="mx-2 mx-sm4 mt-0">
+
+                    <tool-card v-for="tool in filteredTools('modem')" :key="tool.id" :tool="tool" v-if="tool.qty > 0" />
+                    <tool-card v-for="tool in filteredTools('fiber')" :key="tool.id" :tool="tool" v-if="tool.qty > 0" />
+                    <tool-card v-for="tool in filteredTools('etc')" :key="tool.id" :tool="tool" v-if="tool.qty > 0" />
+                    
+                  </v-layout>
+                </div>
               </v-layout>
             </div>
           </v-layout>
@@ -54,14 +72,24 @@
 </template>
 
 <script>
+import ToolCard from '@/components/ToolCard'
 export default {
+  components: {
+    ToolCard
+  },
   computed: {
     user() { return this.$store.state.user },
-    back() { return -1 }
+    teams() { return this.$store.state.team.teams },
+    back() { return -1 },
   },
   methods: {
     onLogout() {
       this.$store.dispatch('userLogout')
+    },
+    filteredTools(type) {
+      return this.teams[0].bag.filter(function (el) {
+        return el.type === type
+      })
     }
   }
 }

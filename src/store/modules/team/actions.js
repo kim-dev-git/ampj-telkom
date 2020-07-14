@@ -14,6 +14,10 @@ export const getTeams = ({ commit }, { role, value }) => {
         team.members = members
         arr.push(team)
       })
+      Team.bag(team.id).then(members => {
+        team.bag = members
+        arr.push(team)
+      })
     })
     commit('SET_TEAMS', arr)
   })

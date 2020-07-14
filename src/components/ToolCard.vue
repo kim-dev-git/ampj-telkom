@@ -16,14 +16,15 @@
           <div id="tool-list-card-text"
             class="ml-3">
             <router-link :to="`/perangkat/${tool.id}`" style="text-decoration: none">
-              <span class="font-weight-bold black--text">{{ tool.name }}</span>
+              <span v-if="currentPath !== '/profil'" class="font-weight-bold black--text">{{ tool.name }}</span>
+              <span v-else class="font-weight-bold black--text">{{ tool.id }}</span>
             </router-link>
             <v-spacer></v-spacer>
             <span class="text--secondary">{{ tool.qty }}</span>
           </div>
           <v-spacer />
           <v-btn id="tool-list-card-request"
-            v-if="user.role === 'Teknisi' || user.role === 'Super Admin'"
+            v-if="user.role === 'Teknisi' && currentPath !== '/profil' || user.role === 'Super Admin' && currentPath !== '/profil'"
             depressed
             rounded
             small
@@ -82,7 +83,8 @@ export default {
     ]),
     valid () {
       return this.qty === null && !this.loading
-    }
+    },
+    currentPath() { return this.$route.path }
   },
   methods: {
     ...mapActions("cart", ["addToolToCart"]),
