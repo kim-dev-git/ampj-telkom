@@ -1,6 +1,6 @@
 <template>
   <div id="request" class="px-4">
-    <navbar />
+    <navbar @print="print = true" />
     <bottom-nav />
     <contentHeading />
     <v-lazy
@@ -18,6 +18,11 @@
         <v-progress-circular indeterminate size="32" />
       </v-container>
     </v-lazy>
+
+    <report v-if="print"
+      :headers="headers"
+      :table="teams"
+      :title="`Laporan Tim (TL: ${teams[0].tlName})`" />
     
   </div>
 </template>
@@ -27,6 +32,7 @@
 import { mapState, mapGetters, mapActions } from "vuex"
 import contentHeading from '@/components/Content/Heading.vue'
 import contentTable from '@/components/Content/Table.vue'
+import report from '@/components/Report/Default'
 
 import Navbar from '@/components/Navbar/Mobile/Navbar'
 import BottomNav from '@/components/Navbar/Mobile/BottomNav'
@@ -37,8 +43,10 @@ export default {
     contentTable,
     Navbar,
     BottomNav,
+    report
   },
   data: () => ({
+    print: null,
     isActive: false,
     headers: [
       { text: 'Tim', value: 'teamName' },

@@ -53,7 +53,18 @@
               <v-layout v-if="user && user.role === 'Teknisi' && teams && teams[0] && teams[0].bag">
                 <div id="tool-list"
                   class="mt-2">
-                  <p class="subtitle-1 font-weight-bold text-center text--disabled mb-0">Tas Teknisi</p>
+                  <v-layout>
+                    <v-spacer />
+                    <p class="subtitle-1 font-weight-bold text-center text--disabled mb-0">Tas Teknisi</p>
+                    <v-spacer />
+                    <v-btn @click="print = true"
+                      icon
+                      color="black"
+                      class="grey lighten-3 mr-2 mt-1"
+                      height="36" width="36">
+                      <v-icon>mdi-printer</v-icon>
+                    </v-btn>
+                  </v-layout>
                   <v-layout
                     row wrap
                     class="mx-2 mx-sm4 mt-0">
@@ -68,15 +79,31 @@
             </div>
           </v-layout>
         </div>
+
+        <report v-if="print"
+          :headers="headers"
+          :table="this.teams[0].bag"
+          :title="`Laporan Tas Teknisi (${this.teams[0].teamName})`" />
+
     </div>
 </template>
 
 <script>
 import ToolCard from '@/components/ToolCard'
+import report from '@/components/Report/Default'
 export default {
   components: {
-    ToolCard
+    ToolCard,
+    report
   },
+  data: () => ({
+    print: null,
+    headers: [
+      { text: 'Perangkat', value: 'pName' },
+      { text: 'Tipe', value: 'type' },
+      { text: 'Jumlah', value: 'qty' },
+    ]
+  }),
   computed: {
     user() { return this.$store.state.user },
     teams() { return this.$store.state.team.teams },

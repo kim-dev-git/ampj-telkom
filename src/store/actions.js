@@ -33,7 +33,9 @@ export const userLogout = ({ commit }) => {
 export const userLogin = ({ commit }, payload) => {
   commit('SET_LOADING', true, { root: true })
   fb.auth().signInWithEmailAndPassword(payload.email, payload.password).then(() => {
-    router.push('/')
+    //router.push('/')
+    // window.location.href = 'http://www.google.com'
+    window.location.replace('/')
   })
   .catch(err => {
     var errCode = err.code

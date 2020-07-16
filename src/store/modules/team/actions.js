@@ -12,12 +12,11 @@ export const getTeams = ({ commit }, { role, value }) => {
     response.forEach(team => {
       Team.members(team.id).then(members => {
         team.members = members
-        arr.push(team)
       })
       Team.bag(team.id).then(members => {
         team.bag = members
-        arr.push(team)
       })
+      arr.push(team)
     })
     commit('SET_TEAMS', arr)
   })
