@@ -81,7 +81,7 @@
         </div>
 
         <report v-if="print"
-          :headers="headers"
+          :headers="headersPrint"
           :table="this.teams[0].bag"
           :title="`Laporan Tas Teknisi (${this.teams[0].teamName})`" />
 
@@ -101,6 +101,12 @@ export default {
     headers: [
       { text: 'Perangkat', value: 'pName' },
       { text: 'Tipe', value: 'type' },
+      { text: 'Jumlah', value: 'qty' },
+    ],
+    headersPrint: [
+      { text: 'Perangkat', value: 'pName' },
+      { text: 'Tipe', value: 'type' },
+      { text: 'Jumlah', value: 'qty' },
       { text: 'Jumlah', value: 'qty' },
     ]
   }),
