@@ -47,6 +47,7 @@ export default {
   },
   data: () => ({
     print: null,
+    printz: null,
     isActive: false,
     headers: [
       { text: 'Tim', value: 'teamName' },
