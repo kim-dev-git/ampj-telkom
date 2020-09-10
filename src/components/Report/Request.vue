@@ -62,6 +62,13 @@ export default {
       head: [vm.head],
       body: vm.data,
     })
+    
+    let height = doc.internal.pageSize.getHeight()
+    let width = doc.internal.pageSize.getWidth()
+    let finalY = doc.previousAutoTable.finalY
+    doc.text("Pengangung Jawab", width - 20, finalY + 20, null, null, "right")
+    doc.text(vm.table.name, width - 20, finalY + 44, null, null, "right")
+
     //let finalY = doc.previousAutoTable.finalY; //this gives you the value of the end-y-axis-position of the previous autotable.
     //doc.text("Text to be shown relative to the table", 12, finalY + 10); //you use the variable and add the number of pixels you want it to move.
     doc.save(vm.title+'.pdf')
