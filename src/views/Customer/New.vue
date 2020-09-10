@@ -3,15 +3,14 @@
     <navbar @print="print = true" />
     <bottom-nav />
     <contentHeading />
-    <!--<v-layout v-if="$store.state.user.role === 'Team Leader'"
-      class="py-4 mb-2">
-      <ul>
-        <li v-for="team in teams" :key="team.id">
-          {{ team }}
-        </li>
-      </ul>
-    </v-layout>-->
-    <v-layout>
+    
+    <filter-comp
+      :headers="headers"
+      :items="customersFilteredStatus"
+      v-model="filtered"
+    />
+
+    <!-- <v-layout>
       <div style="overflow: auto;">
         <v-btn-toggle
           v-model="filter"
@@ -36,7 +35,8 @@
           </v-btn>
         </v-btn-toggle>
       </div>
-    </v-layout>
+    </v-layout> -->
+
     <v-lazy
       v-model="isActive"
       :options="{ threshold: .5 }"
@@ -45,13 +45,13 @@
         <contentTable
           v-if="customersFiltered !== []"
           :headers="headers"
-          :items="customersFilteredStatus" />
+          :items="filtered" />
       </div>
     </v-lazy>
 
     <report v-if="print"
       :headers="headers"
-      :table="customersFilteredStatus"
+      :table="filtered"
       title="Laporan Data Pelanggan" />
     
   </div>
@@ -63,6 +63,7 @@ import { mapState, mapGetters, mapActions } from "vuex"
 import report from '@/components/Report/Default'
 import contentHeading from '@/components/Content/Heading.vue'
 import contentTable from '@/components/Content/Table.vue'
+import FilterComp from '@/components/FilterComp.vue'
 
 import Navbar from '@/components/Navbar/Mobile/Navbar'
 import BottomNav from '@/components/Navbar/Mobile/BottomNav'
@@ -72,10 +73,12 @@ export default {
     report,
     contentHeading,
     contentTable,
+    FilterComp,
     Navbar,
     BottomNav,
   },
   data: () => ({
+    filtered: [],
     print: false,
     isActive: false,
     filter: '0',
