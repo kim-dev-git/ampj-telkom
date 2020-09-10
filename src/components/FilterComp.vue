@@ -23,6 +23,15 @@
       dense
       outlined
     />
+    <v-text-field
+      v-model="filterDate"
+      type="month"
+      label="Bulan"
+      class="mt-n4"
+      clearable
+      dense
+      outlined
+    />
   </div>
 </template>
 
@@ -33,6 +42,7 @@ export default {
     'items',
   ],
   data: () => ({
+    filterDate: null,
     filterBy: null,
     filterValue: null,
     filtered: []
@@ -70,18 +80,48 @@ export default {
         if(this.filterValue) {
           const filterValue = this.filterValue
           const filterBy = this.filterBy
-          const filtered = this.items.filter(v => {
+          const filtered = this.filtered.filter(v => {
             return v[filterBy.value] === filterValue
           })
           this.$emit('input', filtered)
+          this.filtered = filtered
         } else {
           this.$emit('input', this.items)
-          return this.items
+          this.filtered = this.items
+          return this.filtered
         }
       }
-    }
+    },
+    filterDate() {
+      if(!this.filterDate) {
+        this.$emit('input', this.filtered)
+      } else {
+
+        const arr = []
+        const filterDate = this.filterDate
+
+        this.filtered.filter(v => {
+          if(v.createdAt) {
+            const date = new Date(v.createdAt.seconds * 1000)
+            const year = date.getFullYear()
+            const month = date.getMonth() + 1
+            var monthString = month.toString()
+            if(monthString.length === 1) {
+              monthString = '0' + month
+            }
+            const filter = year + '-' + monthString
+
+            if(filter === filterDate) {
+              arr.push(v)
+            }
+          }
+        })
+        this.$emit('input', arr)
+      }
+    },
   },
   mounted() {
+    this.filtered = this.items
     this.$emit('input', this.items)
   }
 }
